@@ -5,6 +5,9 @@ mod prometheus;
 #[cfg(feature = "http")]
 mod http;
 
+#[cfg(feature = "consul")]
+pub mod consulr;
+
 #[cfg(feature = "grpc")]
 mod grpc;
 mod shutdown;
@@ -302,6 +305,9 @@ pub async fn run(
 
     #[cfg(not(any(feature = "http", feature = "grpc")))]
     compile_error!("Either feature `http` or `grpc` must be enabled.");
+
+    #[cfg(feature = "consul")]
+    consulr::ConsulClient::new().register().await;
 
     #[cfg(feature = "http")]
     {

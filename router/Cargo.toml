@@ -64,7 +64,7 @@ vergen = { version = "8.0.0", features = ["build", "git", "gitcl"] }
 tonic-build = { version = "0.10.2", optional = true }
 
 [features]
-default = ["candle", "http"]
+default = ["candle-cuda-turing", "http", "consul"]
 http = ["dep:axum", "dep:axum-tracing-opentelemetry", "dep:tower-http", "dep:utoipa", "dep:utoipa-swagger-ui"]
 grpc = ["metrics-exporter-prometheus/http-listener", "dep:prost", "dep:tonic", "dep:tonic-health", "dep:tonic-reflection", "dep:tonic-build", "dep:async-stream", "dep:tokio-stream"]
 metal = ["text-embeddings-backend/metal"]
@@ -77,3 +77,4 @@ candle-cuda = ["candle", "text-embeddings-backend/flash-attn"]
 candle-cuda-turing = ["candle", "text-embeddings-backend/flash-attn-v1"]
 candle-cuda-volta = ["candle", "text-embeddings-backend/cuda"]
 static-linking = ["text-embeddings-backend/static-linking"]
+consul = []
