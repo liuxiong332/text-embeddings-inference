@@ -21,7 +21,7 @@ RUN curl -sSLO https://mirrors.tuna.tsinghua.edu.cn/rustup/rustup/archive/1.26.0
 
 # Configure cargo
 COPY cargo-config ${CARGO_HOME:-/root/.cargo}/config
-RUN cat ~/.cargo/config
+
 RUN cargo install cargo-chef --locked
 
 FROM base-builder AS planner
