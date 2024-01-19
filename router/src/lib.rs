@@ -2,11 +2,16 @@
 mod logging;
 mod prometheus;
 
-#[cfg(feature = "http")]
-mod http;
+#[cfg(feature = "consul")]
+mod consulr;
 
 #[cfg(feature = "consul")]
-pub mod consulr;
+mod s3_download;
+
+pub mod starter;
+
+#[cfg(feature = "http")]
+mod http;
 
 #[cfg(feature = "grpc")]
 mod grpc;
@@ -39,7 +44,7 @@ pub use logging::init_logging;
 /// Create entrypoint
 #[allow(clippy::too_many_arguments)]
 pub async fn run(
-    model_id: String,
+    mut model_id: String,
     revision: Option<String>,
     tokenization_workers: Option<usize>,
     dtype: Option<DType>,
@@ -55,6 +60,21 @@ pub async fn run(
     huggingface_hub_cache: Option<String>,
     otlp_endpoint: Option<String>,
 ) -> Result<()> {
+    #[cfg(feature = "consul")]
+    {
+        match starter::start_app(model_id.clone(), revision.clone().unwrap_or("".to_string())).await
+        {
+            Ok(new_model) => {
+                model_id.clear();
+                model_id.push_str(&new_model);
+            }
+            Err(err) => {
+                tracing::warn!("Could not start app: {:?}", err);
+                return Err(anyhow!("Could not start app: {:?}", err));
+            }
+        }
+    }
+
     let model_id_path = Path::new(&model_id);
     let model_root = if model_id_path.exists() && model_id_path.is_dir() {
         // Using a local model
@@ -305,9 +325,6 @@ pub async fn run(
 
     #[cfg(not(any(feature = "http", feature = "grpc")))]
     compile_error!("Either feature `http` or `grpc` must be enabled.");
-
-    #[cfg(feature = "consul")]
-    consulr::ConsulClient::new().register().await;
 
     #[cfg(feature = "http")]
     {

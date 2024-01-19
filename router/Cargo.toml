@@ -53,6 +53,12 @@ tonic = { version = "0.10.2", optional = true }
 tonic-health = { version = "0.10.2", optional = true }
 tonic-reflection = { version = "0.10.2", optional = true }
 tokio-stream = { version = "0.1.14", optional = true }
+aws-sdk-s3 = "1.12.0"
+aws-config = "1.1.2"
+aws-types = "1.1.2"
+aws-credential-types = "1.1.2"
+bytes = "1.5.0"
+aws-smithy-types = "1.1.2"
 
 [dev-dependencies]
 insta = { git = "https://github.com/OlivierDehaene/insta", rev = "f4f98c0410b91fb5a28b10df98e4422955be9c2c", features = ["yaml"] }
