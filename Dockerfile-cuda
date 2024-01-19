@@ -20,7 +20,7 @@ RUN curl -sSLO https://mirrors.tuna.tsinghua.edu.cn/rustup/rustup/archive/1.26.0
     && rm rustup-init
 
 # Configure cargo
-COPY cargo-config ${CARGO_HOME:-$HOME/.cargo}/config
+COPY cargo-config ${CARGO_HOME:-/root/.cargo}/config
 RUN cat ~/.cargo/config
 RUN cargo install cargo-chef --locked
 
