@@ -19,6 +19,8 @@ RUN curl -sSLO https://mirrors.tuna.tsinghua.edu.cn/rustup/rustup/archive/1.26.0
     && RUSTUP_DIST_SERVER=https://mirrors.tuna.tsinghua.edu.cn/rustup ./rustup-init -y --no-modify-path --default-toolchain stable --profile minimal --component clippy rustfmt \
     && rm rustup-init
 
+# Configure cargo
+COPY cargo-config ${CARGO_HOME:-$HOME/.cargo}/config
 RUN cargo install cargo-chef --locked
 
 FROM base-builder AS planner
